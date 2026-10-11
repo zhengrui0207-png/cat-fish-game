@@ -1,0 +1,52 @@
+# macOS
+.DS_Store
+*.swp
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# 构建
+dist/
+dist-*/
+build/
+out/
+*.tsbuildinfo
+.cache/
+
+# Python（混入）
+__pycache__/
+*.pyc
+.venv/
+
+# IDE
+.vscode/
+.idea/
+
+# 环境变量（绝密！）
+.env
+.env.local
+.env.*.local
+.auth/
+*.key
+*.pem
+
+# 工具缓存
+.playwright-cli/
+
+# 日志
+*.log
+
+# 3D 资产（不需要进 git）
+*.blend1
+*.blend2
+*.blend3
+*.zip
+*.tar.gz
+
+# 临时
+tmp/
+temp/

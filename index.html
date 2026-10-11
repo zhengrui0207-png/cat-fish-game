@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+    <meta name="theme-color" content="#eef7f8" />
+    <meta name="description" content="小猫抓鱼：打开即玩的 3D 堆叠三消小游戏" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><text y=%2252%22 font-size=%2252%22>🐟</text></svg>" />
+    <title>小猫抓鱼 · 3D小游戏</title>
+  </head>
+  <body>
+    <main id="app" aria-label="小猫抓鱼游戏">
+      <canvas id="game-canvas" aria-label="3D鱼盆游戏区"></canvas>
+
+      <header class="topbar">
+        <button class="round-tool" id="home-btn" aria-label="返回首页" title="返回首页">⌂</button>
+        <div class="status-pill" aria-live="polite">
+          <span class="status-icon">🐟</span><strong id="fish-bones">0</strong>
+        </div>
+        <div class="brand-mini"><span>小猫抓鱼</span><small>厨房偷吃实录</small></div>
+        <div class="top-actions">
+          <button class="book-tool" id="book-btn" aria-label="打开馋猫图鉴" title="馋猫图鉴">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 6.5c4.7 0 8 1.2 11 3.7 3-2.5 6.3-3.7 11-3.7v18.2c-4.5 0-7.8 1-11 3.3-3.2-2.3-6.5-3.3-11-3.3V6.5Z"/><path d="M16 10.2V28M8.6 11.2c1.8.2 3.2.7 4.6 1.5M8.6 15.4c1.8.2 3.2.7 4.6 1.5M23.4 11.2c-1.8.2-3.2.7-4.6 1.5M23.4 15.4c-1.8.2-3.2.7-4.6 1.5"/></svg>
+            <span>图鉴</span>
+          </button>
+          <button class="round-tool" id="sound-btn" aria-label="关闭声音" title="声音">♪</button>
+        </div>
+      </header>
+
+      <section id="home-screen" class="home-screen screen active" aria-labelledby="game-title">
+        <div class="title-lockup">
+          <span class="eyebrow">暖阳厨房 · 3D 水盆</span>
+          <h1 id="game-title"><span>小猫</span>抓鱼</h1>
+          <p>一盆真水，一只馋猫，别让主人发现</p>
+        </div>
+        <div class="cat-callout" aria-hidden="true">
+          <span>闻到鱼香啦…</span>
+        </div>
+        <div class="difficulty-panel" aria-label="选择难度">
+          <div class="difficulty-heading">
+            <span>选一个鱼盆</span>
+            <small>每种盆型都有不同容量、深度与水色</small>
+          </div>
+          <div class="difficulty-grid" id="difficulty-grid"></div>
+        </div>
+      </section>
+
+      <section id="game-hud" class="game-hud screen" aria-label="游戏状态">
+        <div class="mission-card">
+          <span class="mission-label">目标</span>
+          <strong>捞到盆底大鱼</strong>
+          <span id="timer">00:00</span>
+        </div>
+        <div id="patrol-status" class="patrol-status"><span></span>主人随时会来巡逻</div>
+        <div id="toast" class="toast" role="status" aria-live="polite"></div>
+        <div id="patrol-alert" class="patrol-alert" role="alert">
+          <span class="footsteps">咚 · 咚 · 咚</span>
+          <strong>主人来了！别动！</strong>
+          <small>假装舔爪子…</small>
+        </div>
+        <div id="tutorial" class="tutorial" aria-live="polite">
+          <div class="tutorial-progress"><i></i><i></i><i></i><i></i></div>
+          <span class="tutorial-step" id="tutorial-step">新手教学 · 1/4</span>
+          <div class="tutorial-message"><span class="tutorial-hand">☝</span><strong id="tutorial-text">先捞水面上闪光的小鱼干</strong></div>
+          <small id="tutorial-hint">凑齐 3 个相同物品，小猫就会吃掉</small>
+          <button id="tutorial-skip" type="button">跳过教学</button>
+        </div>
+        <div id="coach-arrow" class="coach-arrow" aria-hidden="true">⌄</div>
+        <div id="cat-reaction" class="cat-reaction" role="status" aria-live="polite">
+          <div class="reaction-frame"><div class="reaction-image"></div></div>
+          <div><strong id="reaction-title">小猫有反应了</strong><span id="reaction-copy"></span></div>
+        </div>
+        <button id="shake-btn" class="shake-btn" aria-label="扒盆晃鱼">
+          <span class="paw">🐾</span>
+          <span><strong>晃一晃</strong><small>翻出藏在下面的鱼</small></span>
+          <b id="shake-count">5</b>
+        </button>
+        <div class="tray-wrap" aria-label="收纳槽">
+          <div class="tray-label"><span>收纳槽</span><small>3 个相同自动吃掉</small></div>
+          <div id="tray" class="tray"></div>
+        </div>
+      </section>
+
+      <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-card">
+          <div id="modal-cat" class="modal-cat" aria-hidden="true">😺</div>
+          <span id="modal-kicker" class="modal-kicker">本局结束</span>
+          <h2 id="modal-title">抓到大鱼啦</h2>
+          <p id="modal-copy"></p>
+          <div id="modal-reward" class="modal-reward"></div>
+          <div class="modal-actions">
+            <button id="primary-action" class="primary-action">再捞一次</button>
+            <button id="revive-action" class="secondary-action">免费复活一次</button>
+            <button id="secondary-action" class="text-action">换个鱼盆</button>
+          </div>
+        </div>
+      </div>
+
+      <aside id="collection" class="collection" aria-labelledby="collection-title">
+        <div class="collection-sheet">
+          <div class="sheet-handle"></div>
+          <div class="collection-head">
+            <div><span class="eyebrow">物品作用与鱼类收集</span><h2 id="collection-title">馋猫图鉴</h2></div>
+            <button id="close-book" class="round-tool" aria-label="关闭鱼谱">×</button>
+          </div>
+          <div class="collection-summary"><strong id="collection-count">0 / 16</strong><span>捞过的东西会亮起来，随时查看它们的作用</span></div>
+          <div class="catalog-section"><h3>盆中物品</h3><div id="item-grid" class="item-grid"></div></div>
+          <div class="catalog-section"><h3>通关鱼类</h3><div id="fish-grid" class="fish-grid"></div></div>
+          <div class="skin-section"><h3>猫咪皮肤</h3><div id="skin-grid" class="skin-grid"></div></div>
+        </div>
+      </aside>
+
+      <div id="pause-cover" class="pause-cover"><strong>小猫歇一会儿</strong><span>回到页面后继续捞鱼</span></div>
+      <div id="confetti" class="confetti" aria-hidden="true"></div>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
